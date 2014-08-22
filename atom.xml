@@ -4,7 +4,7 @@
   <title><![CDATA[Sebastian Kropp]]></title>
   <link href="http://sebastiankr.github.io/atom.xml" rel="self"/>
   <link href="http://sebastiankr.github.io/"/>
-  <updated>2014-08-22T13:11:28+03:00</updated>
+  <updated>2014-08-22T14:04:43+03:00</updated>
   <id>http://sebastiankr.github.io/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -12,5 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[D3 Update Pattern on Nested Data]]></title>
+    <link href="http://sebastiankr.github.io/blog/2014/08/22/d3-update-pattern-on-nested-data/"/>
+    <updated>2014-08-22T13:27:07+03:00</updated>
+    <id>http://sebastiankr.github.io/blog/2014/08/22/d3-update-pattern-on-nested-data</id>
+    <content type="html"><![CDATA[<h1>A First Level Header</h1>
+
+<h2>A Second Level Header</h2>
+
+<p>Now is the time for all good men to come to
+the aid of their country. This is just a
+regular paragraph.</p>
+
+<p>The quick brown fox jumped over the lazy
+dog&rsquo;s back.</p>
+
+<h3>Header 3</h3>
+
+<blockquote><p>This is a blockquote.</p>
+
+<p>This is the second paragraph in the blockquote.</p>
+
+<h2>This is an H2 in a blockquote</h2></blockquote>
+]]></content>
+  </entry>
   
 </feed>
