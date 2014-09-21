@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Sebastian Kropp]]></title>
-  <link href="http://sebastian.kropponline.de/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Big Data | Sebastian Kropp]]></title>
+  <link href="http://sebastian.kropponline.de/blog/categories/big-data/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
   <updated>2014-09-21T16:00:44-04:00</updated>
   <id>http://sebastian.kropponline.de/</id>
@@ -18,36 +18,21 @@
     <link href="http://sebastian.kropponline.de/blog/2013/09/04/d3-update-pattern-on-nested-data/"/>
     <updated>2013-09-04T00:00:00-04:00</updated>
     <id>http://sebastian.kropponline.de/blog/2013/09/04/d3-update-pattern-on-nested-data</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application1&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;DEBUG&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;INFO&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;WARN&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;ERROR&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;FATAL&quot;</span><span class="p">:</span> <span class="mi">5</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span><span class="err">,</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application2&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'><span class="err">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+    <content type="html"><![CDATA[<pre><code class="json ">{
+    "name":"Application1",
+    "logCounts": {
+        "DEBUG": 8,
+        "INFO": 12,
+        "WARN": 32,
+        "ERROR": 47,
+        "FATAL": 5
+    }
+},
+{
+    "name":"Application2",
+    "logCounts": {
+...
+</code></pre>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
@@ -230,7 +215,7 @@ function makeid() {
     <link href="http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale/"/>
     <updated>2013-08-22T00:00:00-04:00</updated>
     <id>http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://sebastian.kropponline.de/images/hadoop/hadoop-elephant.png" width="240" title="Hadoop Logo" ></p>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/hadoop/hadoop-elephant.png" width="240" title="Hadoop Logo" ></p>
 
 <p>We currently read a lot about how good Hadoop scales by mapping data and processes out to commodity nodes. To disappoint you right away, this post is not a general criticism of Hadoop. I do not even want to argue that Hadoop does not scale logarithmically. There are already a lot of papers that look at which algorithms are suited for MapReduce.</p>
 
@@ -255,10 +240,8 @@ function makeid() {
 
 <h4>Scaling transistors vs scaling a cluster</h4>
 
-<p><a href="http://en.wikipedia.org/wiki/Moore%27s_law">Moore&rsquo;s law</a> has proven to be good so far. Transistors are doubling every 18 month or so. Hadoop makes use of this exponential growth as well, but not nearly as good as it could. There is no build in way to make use of GPU or other hardware acceleration. Of course you can build that into your distributed functions, but it is not practical for a couple of reasons. In order to make use of the exponential growth, the environment needs to make efficient use of the die. Hadoop lacks that capability. If you want to scale better you make use of the nano-scale.</p>
-
-<blockquote><p>There&#8217;s Plenty of Room at the Bottom</p><footer><strong>Richard Feynman</strong> <cite><a href='http://en.wikipedia.org/wiki/There&#39;s_Plenty_of_Room_at_the_Bottom'>en.wikipedia.org/wiki/&hellip;</a></cite></footer></blockquote>
-
+<p><a href="http://en.wikipedia.org/wiki/Moore%27s_law">Moore&rsquo;s law</a> has proven to be good so far. Transistors are doubling every 18 month or so. Hadoop makes use of this exponential growth as well, but not nearly as good as it could. There is no build in way to make use of GPU or other hardware acceleration. Of course you can build that into your distributed functions, but it is not practical for a couple of reasons. In order to make use of the exponential growth, the environment needs to make efficient use of the die. Hadoop lacks that capability. If you want to scale better you make use of the nano-scale.
+<blockquote><p>There&rsquo;s Plenty of Room at the Bottom</p><footer><strong>Richard Feynman <a href="http://en.wikipedia.org/wiki/There&amp;#39;s_Plenty_of_Room_at_the_Bottom">http://en.wikipedia.org/wiki/There&amp;#39;s_Plenty_of_Room_at_the_Bottom</a></strong></footer></blockquote></p>
 
 <h4>Batch</h4>
 
@@ -320,7 +303,7 @@ But one strong indication for Hadoop’s suboptimal model is the probably bigges
 
 <p>Additionally, as we look closer at &ldquo;Velocity&rdquo; as one of the 3Vs of Big Data, we need mechanisms to ingest and show events immediately. We need libraries that are compatible with our Event-driven architectures. Hey, we finally have WebSockets, let&rsquo;s use them! Maintaining report schedules and running batch processes is so 1990ies and a huge overhead.</p>
 
-<p><img src="http://sebastian.kropponline.de/images/d3/d3theme.jpg" title="D3 Theme" ></p>
+<p><img src="/images/d3/d3theme.jpg" title="D3 Theme" ></p>
 
 <!-- more -->
 
@@ -354,7 +337,7 @@ But one strong indication for Hadoop’s suboptimal model is the probably bigges
 <p>Hopefully I will be able to find some time to write a post about update patterns on nested data eventually to show you how this can be done with D3.</p>
 
 <p><strong>[Update 05/22/2013]</strong>
-<em>I finally got around to write something up. Have a look at <a href="http://sebastian.kropponline.de/blog/2013/05/22/d3-update-pattern-on-nested-data">D3 Update Pattern on Nested Data</a>. This will help you to understand how to handle updates to nested data.</em></p>
+<em>I finally got around to write something up. Have a look at <a href="/blog/2013/05/22/d3-update-pattern-on-nested-data">D3 Update Pattern on Nested Data</a>. This will help you to understand how to handle updates to nested data.</em></p>
 ]]></content>
   </entry>
   

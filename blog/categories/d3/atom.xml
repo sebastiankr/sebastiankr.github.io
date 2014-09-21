@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: D3 | Sebastian Kropp]]></title>
-  <link href="http://sebastiankr.github.io/blog/categories/d3/atom.xml" rel="self"/>
-  <link href="http://sebastiankr.github.io/"/>
-  <updated>2014-08-24T22:20:33+03:00</updated>
-  <id>http://sebastiankr.github.io/</id>
+  <link href="http://sebastian.kropponline.de/blog/categories/d3/atom.xml" rel="self"/>
+  <link href="http://sebastian.kropponline.de/"/>
+  <updated>2014-09-21T16:00:44-04:00</updated>
+  <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
     
@@ -15,16 +15,245 @@
   
   <entry>
     <title type="html"><![CDATA[D3 Update Pattern on Nested Data]]></title>
-    <link href="http://sebastiankr.github.io/blog/2014/08/22/d3-update-pattern-on-nested-data/"/>
-    <updated>2014-08-22T00:00:00+03:00</updated>
-    <id>http://sebastiankr.github.io/blog/2014/08/22/d3-update-pattern-on-nested-data</id>
-    <content type="html"><![CDATA[<p>D3 is a great JavaScript library to visualize data. Visualization is still an overlooked aspect of the Big Data picture. The real
-value of data comes from gaining an understanding and act upon that understanding. Visualization is a great way to make
-data understandable.</p>
+    <link href="http://sebastian.kropponline.de/blog/2013/09/04/d3-update-pattern-on-nested-data/"/>
+    <updated>2013-09-04T00:00:00-04:00</updated>
+    <id>http://sebastian.kropponline.de/blog/2013/09/04/d3-update-pattern-on-nested-data</id>
+    <content type="html"><![CDATA[<pre><code class="json ">{
+    "name":"Application1",
+    "logCounts": {
+        "DEBUG": 8,
+        "INFO": 12,
+        "WARN": 32,
+        "ERROR": 47,
+        "FATAL": 5
+    }
+},
+{
+    "name":"Application2",
+    "logCounts": {
+...
+</code></pre>
 
-<p>Additionally as we look closer to at the third V, Velocity, we need mechanisms to ingest and show events
-immediately, need libraries that are compatible with our Event-driven architectures. Hey, we finally
-have WebSockets, let&rsquo;s use them!</p>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+<div id="nestedUpdateExample"></div>
+
+
+
+
+<script type="text/javascript">
+(function () {
+    "use strict";
+    var data = [];
+    data.push({ name: 'Application1', logCounts: { DEBUG: 8, INFO: 12, WARN: 32, ERROR: 47, FATAL: 5 } });
+    data.push({ name: 'Application1', logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
+
+    function renderLoop(data) {
+        if (data.length > 0) {
+            var keys = d3.keys(data[0].logCounts);
+            var table = d3.select("#nestedUpdateExample").append("table").attr("class","table table-striped");
+
+            var header = table.append("thead").attr("id", "header").append("tr");
+
+            header = header.selectAll("tr").data(function (d,i) {
+                // Add "Application Name" to the header data
+                var headerRowData = ["Application Name"];
+                return headerRowData.concat(keys);
+            });
+            
+            header.enter().append("td").text(function (d) {
+                return d;
+            });
+
+            var tbody = table.append("tbody");
+            var row = tbody.selectAll("tr").data(data);
+            
+            row.enter().append("tr");
+            row.exit().remove();
+            
+            var cell = row.selectAll("td").data(function (d, i) {
+                var rowdata = [{ name: "app", value: d.name }];
+                rowdata = rowdata.concat(keys.map(function (keyname) {
+                    return { name: keyname, value: d.logCounts[keyname] };
+                }));
+            return rowdata;
+        });
+
+        cell.text(function (count) {
+            return count.value;
+        });
+
+        cell.enter().append("td").text(function (count) {
+            return count.value;
+        });
+            
+        } else {
+            var message = d3.select("#nestedUpdateExample").append("p").text("Error: No data to display!").transition().style("color", "red");
+
+            return;
+        }
+    };
+
+    renderLoop(data);
+
+    d3.select("#updateapp").on("click", function (d) {
+        if (data.length > 0) {
+            data[0].logCounts["INFO"] += 1;
+            update(data);
+        }
+    });
+
+    d3.select("#addapp").on("click", function (d) {
+        data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
+        update(data);
+    });
+
+    d3.select("#removeapp").on("click", function (d) {
+        data.pop();
+        update(data);
+    });
+
+    function makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+    ;
+})();
+</script>
+
+
+
+
+<!--script type="text/javascript">
+
+var data = [
+    { name: &#8216;CARA&#8217;, logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } }
+];
+
+var keys = d3.keys(data[0].logCounts);
+
+if (data.length > 0) {
+    var table = d3.select(&#8220;#nestedUpdateExample&#8221;).append(&#8220;table&#8221;);
+
+    var header = table.append(&#8220;thead&#8221;).attr(&#8220;id&#8221;, &#8220;header&#8221;).append(&#8220;tr&#8221;);
+
+    header.append(&#8220;td&#8221;).text(&#8220;app&#8221;);
+    header.selectAll(&#8220;td&#8221;).data(keys).enter().append(&#8220;td&#8221;).text(function (d) {
+        return d;
+    });
+
+    var tbody = table.append(&#8220;tbody&#8221;);
+}
+
+function update(data) {
+    var row = tbody.selectAll(&#8220;tr&#8221;).data(data);
+
+    row.enter().append(&#8220;tr&#8221;).append(&#8220;td&#8221;).text(data.name);
+
+    row.exit().remove();
+
+    var cell = row.selectAll(&#8220;td&#8221;).data(function (d, i) {
+        var rowdata = [{ name: &#8220;app&#8221;, value: d.name }];
+        rowdata = rowdata.concat(keys.map(function (keyname) {
+            return { name: keyname, value: d.logCounts[keyname] };
+        }));
+        return rowdata;
+    });
+
+    cell.text(function (count) {
+        return count.value;
+    });
+
+    cell.enter().append(&#8220;td&#8221;).text(function (count) {
+        return count.value;
+    });
+}
+;
+
+update(data);
+
+d3.select(&#8220;#updateapp&#8221;).on(&#8220;click&#8221;, function (d) {
+    if (data.length > 0) {
+        data[0].logCounts[&#8220;INFO&#8221;] += 1;
+        update(data);
+    }
+});
+
+d3.select(&#8220;#addapp&#8221;).on(&#8220;click&#8221;, function (d) {
+    data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
+    update(data);
+});
+
+d3.select(&#8220;#removeapp&#8221;).on(&#8220;click&#8221;, function (d) {
+    data.pop();
+    update(data);
+});
+
+function makeid() {
+    var text = &#8220;&#8221;;
+    var possible = &#8220;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#8221;;
+
+    for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+;
+</script-->
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Big Data Visualization and D3]]></title>
+    <link href="http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3/"/>
+    <updated>2013-02-12T00:00:00-05:00</updated>
+    <id>http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3</id>
+    <content type="html"><![CDATA[<p><a href="http://d3js.org/">D3.js</a> is a great JavaScript library to visualize data. Visualization is an overlooked aspect of the Big Data picture. The real value of data is to gain an understanding and act accordingly. Visualization is a great way to make data understandable.</p>
+
+<p>Additionally, as we look closer at &ldquo;Velocity&rdquo; as one of the 3Vs of Big Data, we need mechanisms to ingest and show events immediately. We need libraries that are compatible with our Event-driven architectures. Hey, we finally have WebSockets, let&rsquo;s use them! Maintaining report schedules and running batch processes is so 1990ies and a huge overhead.</p>
+
+<p><img src="/images/d3/d3theme.jpg" title="D3 Theme" ></p>
+
+<!-- more -->
+
+
+<p>The D3 programming model is declarative and the developer is in full control to express data visually. It has many benefits over other libraries in this area:</p>
+
+<ul>
+<li>easy to show changes in data (updates and transitions)</li>
+<li>powerful declarative model</li>
+<li>easy to learn (lots of <a href="https://github.com/mbostock/d3/wiki/Gallery">examples</a>)</li>
+<li>manipulates native DOM elements (reuse your knowledge in CSS, HTML, SVG)</li>
+<li>very modular (you do not need everything)</li>
+<li>composable (plays nice with others)</li>
+</ul>
+
+
+<h3>How does it compare to JQuery or MVC/MVVM concepts like Angular.js or Knockout.js?</h3>
+
+<p>There is a substantial overlap between these three library concepts. The all have a different focus. But it is sometimes not easy to decide in which case to use which library. They can be used together of course, but here are some guidelines to help you decide.</p>
+
+<h4>JQuery</h4>
+
+<p>D3 can do a lot of what JQuery does in a similar way. Granted, it does not have such a rich gallery of plugins that make JQuery ideal for rapid development. But D3 can be used to attach event handlers to any DOM element or make AJAX data calls as well. JQuery is imperative and gets hard to maintain. I have not worked on a maturing D3 codebase as much as I had to fix bloated JQuery code. Because of D3&rsquo;s declarative nature I am sure that D3 code will not get messy as fast as JQuery code.</p>
+
+<h4>Angular.js/Knockout.js</h4>
+
+<p>Contrary to Angular or Knockout, D3 is not based on templates. These templates help to understand the initial DOM. D3 could be used with an initial DOM structure as well, it is better to completely construct the part of the DOM from scratch. This helps to create encapsulated modules. These modules could be used/attach on any host element in the DOM. It is probably easy to inject D3 functionality into the <a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a>, once they are supported by all browsers. If data is changing the initial template completely, templates could be counterproductive. An example would be you start with a <code>table</code> and get data that requires you to switch over to a <code>SVG</code>. Angular.js offers obviously much more in terms of MVC encapsulation, site navigation/history etc. But it is amazing how much similarity and overlap there is. Core to all of them is the data binding and selectors. D3 is the only real declarative option. There are still a lot of for loops in Angular/Knockout templates. You could probably tweak Angular to do the same things as D3 and vice versa. But I would recommend using the different libraries in conjunction and use them according to their respective focus. And yes agreed, that is sometimes easier said than done, especially with Angular.js.</p>
+
+<p>There are also some downsides to D3. There is this issues that all these libraries have with SEO. Or rather it is Google&rsquo;s and Bing’s problem that their crawlers are not indexing JavaScript generated DOMs. This has to change! Another issue with D3 is that it is sometimes hard to understand the side effects, especially if working with nested data. For example if you have multiple pie charts which need to appear and disappear, and these charts have changing data themselves. This is especially hard for programmers who have little experience with functional languages/concepts.</p>
+
+<p>Hopefully I will be able to find some time to write a post about update patterns on nested data eventually to show you how this can be done with D3.</p>
+
+<p><strong>[Update 05/22/2013]</strong>
+<em>I finally got around to write something up. Have a look at <a href="/blog/2013/05/22/d3-update-pattern-on-nested-data">D3 Update Pattern on Nested Data</a>. This will help you to understand how to handle updates to nested data.</em></p>
 ]]></content>
   </entry>
   
