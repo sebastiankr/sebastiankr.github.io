@@ -9,21 +9,7 @@
   <meta name="author" content="Sebastian Kropp">
 
   
-  <meta name="description" content="1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-{ &quot;name&quot;:&quot;Application1&quot;, &quot;logCounts&quot;: { &quot;DEBUG&quot;: 8, &quot;INFO&quot;: 12, & &hellip;">
+  <meta name="description" content="This post builds on Mike Bostock&rsquo;s great tutorial on how selection works on nested data and his series on the update pattern. To make the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -113,7 +99,44 @@
   </header>
 
 
-<div class="entry-content"><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="entry-content"><script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+
+
+<p>This post builds on Mike Bostock&rsquo;s great <a href="http://bost.ocks.org/mike/nest/">tutorial on how selection works on nested data</a> and his <a href="http://bl.ocks.org/mbostock/3808218">series on the update pattern</a>. To make the example more realistic, let us build a table that shows counts of log messages for different applications and for the severity levels <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>, and <code>FATAL</code>. The table will update itself to changes in the log count data. Messages could be pushed by WebSockets, but we will just simulate this for now.</p>
+
+<p>Here is how the finished logging table application looks like. Feel free to play around with it.</p>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+  
+<a id="addapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-plus"></span> Add App
+</a>
+<a id="removeapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-minus"></span> Remove App
+</a>
+<a id="updateapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-pencil"></span> Update message count
+</a>
+<br><br>
+<div id="nestedUpdateExample"></div>
+ </div>
+</div>
+
+
+<script type="text/javascript" src="/javascripts/d3example/createtable.js"></script>
+
+
+<p>Try it out on jsFiddle: <a href="http://jsfiddle.net/skropp/k43r9qmc/10/">http://jsfiddle.net/skropp/k43r9qmc/10/</a></p>
+
+<p>You can easily adapt this pattern to show nested bar charts or similar.</p>
+
+<!-- more -->
+
+
+<p>Let us now reconstruct the code piece by piece and start with looking at only one application. The first goal is to update individual counts. The HTML for the table looks like this.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -127,6 +150,148 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;thead&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;tr&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>Application Name<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>DEBUG<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>INFO<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>WARN<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>ERROR<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;td&gt;</span>FATAL<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/tr&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/thead&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;tbody&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;tr</span> <span class="na">id=</span><span class="s">&quot;Application1&quot;</span><span class="nt">&gt;&lt;/tr&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/tbody&gt;</span>
+</span><span class='line'><span class="nt">&lt;/table&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+<p>This <code>table</code> uses Bootsrap CSS classes to make it look a little nicer.<br/>
+We are now just hooking us into the <code>DOM</code> at <code>&lt;tr id="Application1"&gt;&lt;/tr&gt;</code> to create the <code>&lt;td&gt;</code>&rsquo;s on <code>ENTER</code> and change the text of the <code>&lt;td&gt;</code> on update. This is what is needed to make it work with just a few lines of code.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Application1&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// this is the rendering loop</span>
+</span><span class='line'><span class="c1">// similar to a game loop </span>
+</span><span class='line'><span class="kd">function</span> <span class="nx">renderLoop</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// select the row with the id=&#39;Application&#39;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">row</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#Application1&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// UPDATE</span>
+</span><span class='line'>    <span class="nx">cell</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">;})</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">duration</span><span class="p">(</span><span class="mi">800</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;data-prevVal&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;data-prevVal&quot;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="s2">&quot;red&quot;</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="p">;})</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">duration</span><span class="p">(</span><span class="mi">800</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span><span class="s2">&quot;black&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//ENTER</span>
+</span><span class='line'>    <span class="nx">cell</span><span class="p">.</span><span class="nx">enter</span><span class="p">()</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;data-prevVal&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">d</span><span class="p">;})</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">;});</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">renderLoop</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+<p>This is all normal D3, except that in order to make the changed values light up in red, we have to store the previous value for that cell and compare it with the old one. We have to do that because despite its name <code>UPDATE</code>, D3 is not really detecting updates on the individual value level. <code>UPDATE</code> is executing on each element in the row where a change has occurred and we do not want every cell transition to red.<br/>
+We store the value in the <code>DOM</code> with the attribute <code>data-prevVal</code>. Depending on your situation, it might be a better to store these previous values in the property of the javascript <code>DOM</code> element representation itself. This is how D3 does it with the <code>__data__</code> property.<br/>
+Additionally it would be better to use the <code>selection.filter()</code> function to prevent <code>UPDATE</code> to fire on the values that have not really changed. But this is advanced and harder to understand.</p>
+
+<p>This is how <code>table</code> looks like for one application:</p>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+<a id="updateapp1" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-pencil"></span> Update message count
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td>Application Name</td>
+            <td>DEBUG</td>
+            <td>INFO</td>
+            <td>WARN</td>
+            <td>ERROR</td>
+            <td>FATAL</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="Application1"></tr>
+    </tbody>
+</table>
+ </div>
+</div>
+
+
+
+
+<script type="text/javascript" src="/javascripts/d3example/oneappexample.js"></script>
+
+
+<p><a href="http://jsfiddle.net/skropp/bkr4ao09/1/">http://jsfiddle.net/skropp/bkr4ao09/1/</a></p>
+
+<p>Calling the <code>renderLoop</code> all the time we change <code>data</code> is a very imperative style of programing. What we actually want is that it automatically re-renders when <code>data</code> changes. We could achieve that by using libraries like <a href="http://reactive-extensions.github.io/RxJS/">RxJS</a> and make <code>data</code> an <code>Observable</code> collection.</p>
+
+<p>Most of the time your JavaScript app is not receiving data in this simple array fashion of <code>var data = ["Application1", 2, 3, 4, 5, 6]</code>. It is likely going to look more like this.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application1&quot;</span><span class="p">,</span>
 </span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -140,183 +305,109 @@
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application2&quot;</span><span class="p">,</span>
 </span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>
 </span><span class='line'><span class="err">...</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<p>You now have two option to adjust to that schema. One is to transform the data into a simple array whenever you receive these types of messages. The other way is to create the schema on read within D3 <code>selection.data()</code> function.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>        <span class="c1">// UPDATE cell level</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">rowdata</span> <span class="o">=</span> <span class="p">[{</span>
+</span><span class='line'>                <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;app&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="nx">value</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">name</span>
+</span><span class='line'>                        <span class="p">}];</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nx">rowdata</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">keyname</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="nx">name</span><span class="o">:</span> <span class="nx">keyname</span><span class="p">,</span>
+</span><span class='line'>                    <span class="nx">value</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">logCounts</span><span class="p">[</span><span class="nx">keyname</span><span class="p">]</span>
+</span><span class='line'>                <span class="p">};</span>
+</span><span class='line'>            <span class="p">}));</span>
+</span><span class='line'>        <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<div id="nestedUpdateExample"></div>
+<p>This creates a name-value collection on the fly. Inside our <code>UPDATE</code> and <code>ENTER</code> sections we now reference <code>d.name</code> and <code>d.value</code>.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">cell</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">value</span><span class="p">;})</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="c1">// ENTER cell level</span>
+</span><span class='line'><span class="nx">cell</span><span class="p">.</span><span class="nx">enter</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;data-prevVal&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">){</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">value</span><span class="p">;})</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">value</span><span class="p">;});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
+<p>The other change that you will see in the code is that the <code>table</code> is created from scratch with D3. We cannot work with static <code>table</code> template on the page because we display a message once if there is no data coming in.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// remove err msg if it was shown previously</span>
+</span><span class='line'>    <span class="nx">tablediv</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#logtableerrmsg&quot;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">keys</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">logCounts</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// create table if table does not exist</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">table</span><span class="p">.</span><span class="nx">node</span><span class="p">())</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">table</span> <span class="o">=</span> <span class="nx">tablediv</span>
+</span><span class='line'>          <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;logtable&quot;</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;table table-striped&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">table</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;thead&quot;</span><span class="p">).</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// Add &quot;Application Name&quot; to the header data</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">headerRowData</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Application Name&quot;</span><span class="p">];</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nx">headerRowData</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">keys</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">})</span>
+</span><span class='line'>      <span class="c1">// ENTER row level (for table header)</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">enter</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">;});</span>
+</span><span class='line'>        <span class="nx">tbody</span> <span class="o">=</span> <span class="nx">table</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<script type="text/javascript">
-(function () {
-    "use strict";
-    var data = [];
-    data.push({ name: 'Application1', logCounts: { DEBUG: 8, INFO: 12, WARN: 32, ERROR: 47, FATAL: 5 } });
-    data.push({ name: 'Application1', logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
-
-    function renderLoop(data) {
-        if (data.length > 0) {
-            var keys = d3.keys(data[0].logCounts);
-            var table = d3.select("#nestedUpdateExample").append("table").attr("class","table table-striped");
-
-            var header = table.append("thead").attr("id", "header").append("tr");
-
-            header = header.selectAll("tr").data(function (d,i) {
-                // Add "Application Name" to the header data
-                var headerRowData = ["Application Name"];
-                return headerRowData.concat(keys);
-            });
-            
-            header.enter().append("td").text(function (d) {
-                return d;
-            });
-
-            var tbody = table.append("tbody");
-            var row = tbody.selectAll("tr").data(data);
-            
-            row.enter().append("tr");
-            row.exit().remove();
-            
-            var cell = row.selectAll("td").data(function (d, i) {
-                var rowdata = [{ name: "app", value: d.name }];
-                rowdata = rowdata.concat(keys.map(function (keyname) {
-                    return { name: keyname, value: d.logCounts[keyname] };
-                }));
-            return rowdata;
-        });
-
-        cell.text(function (count) {
-            return count.value;
-        });
-
-        cell.enter().append("td").text(function (count) {
-            return count.value;
-        });
-            
-        } else {
-            var message = d3.select("#nestedUpdateExample").append("p").text("Error: No data to display!").transition().style("color", "red");
-
-            return;
-        }
-    };
-
-    renderLoop(data);
-
-    d3.select("#updateapp").on("click", function (d) {
-        if (data.length > 0) {
-            data[0].logCounts["INFO"] += 1;
-            update(data);
-        }
-    });
-
-    d3.select("#addapp").on("click", function (d) {
-        data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
-        update(data);
-    });
-
-    d3.select("#removeapp").on("click", function (d) {
-        data.pop();
-        update(data);
-    });
-
-    function makeid() {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    }
-    ;
-})();
-</script>
-
-
-
-
-<!--script type="text/javascript">
-
-var data = [
-    { name: 'CARA', logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } }
-];
-
-var keys = d3.keys(data[0].logCounts);
-
-if (data.length > 0) {
-    var table = d3.select("#nestedUpdateExample").append("table");
-
-    var header = table.append("thead").attr("id", "header").append("tr");
-
-    header.append("td").text("app");
-    header.selectAll("td").data(keys).enter().append("td").text(function (d) {
-        return d;
-    });
-
-    var tbody = table.append("tbody");
-}
-
-function update(data) {
-    var row = tbody.selectAll("tr").data(data);
-
-    row.enter().append("tr").append("td").text(data.name);
-
-    row.exit().remove();
-
-    var cell = row.selectAll("td").data(function (d, i) {
-        var rowdata = [{ name: "app", value: d.name }];
-        rowdata = rowdata.concat(keys.map(function (keyname) {
-            return { name: keyname, value: d.logCounts[keyname] };
-        }));
-        return rowdata;
-    });
-
-    cell.text(function (count) {
-        return count.value;
-    });
-
-    cell.enter().append("td").text(function (count) {
-        return count.value;
-    });
-}
-;
-
-update(data);
-
-d3.select("#updateapp").on("click", function (d) {
-    if (data.length > 0) {
-        data[0].logCounts["INFO"] += 1;
-        update(data);
-    }
-});
-
-d3.select("#addapp").on("click", function (d) {
-    data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
-    update(data);
-});
-
-d3.select("#removeapp").on("click", function (d) {
-    data.pop();
-    update(data);
-});
-
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-;
-</script-->
-
+<p>Have fun coding!</p>
 </div>
 
 
@@ -337,7 +428,7 @@ function makeid() {
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/big-data/'>big data</a>, <a class='category' href='/blog/categories/d3/'>d3</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/visualization/'>visualization</a>
+    <a class='category' href='/blog/categories/big-data/'>big data</a>, <a class='category' href='/blog/categories/bootstrap/'>bootstrap</a>, <a class='category' href='/blog/categories/d3/'>d3</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/visualization/'>visualization</a>
   
 </span>
 

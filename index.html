@@ -9,21 +9,7 @@
   <meta name="author" content="Sebastian Kropp">
 
   
-  <meta name="description" content="1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-{ &quot;name&quot;:&quot;Application1&quot;, &quot;logCounts&quot;: { &quot;DEBUG&quot;: 8, &quot;INFO&quot;: 12, & &hellip;">
+  <meta name="description" content="This post builds on Mike Bostock&rsquo;s great tutorial on how selection works on nested data and his series on the update pattern. To make the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -116,212 +102,44 @@
   </header>
 
 
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application1&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;DEBUG&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;INFO&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;WARN&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;ERROR&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;FATAL&quot;</span><span class="p">:</span> <span class="mi">5</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span><span class="err">,</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Application2&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;logCounts&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'><span class="err">...</span>
-</span></code></pre></td></tr></table></div></figure>
+  <div class="entry-content"><script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<p>This post builds on Mike Bostock&rsquo;s great <a href="http://bost.ocks.org/mike/nest/">tutorial on how selection works on nested data</a> and his <a href="http://bl.ocks.org/mbostock/3808218">series on the update pattern</a>. To make the example more realistic, let us build a table that shows counts of log messages for different applications and for the severity levels <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>, and <code>FATAL</code>. The table will update itself to changes in the log count data. Messages could be pushed by WebSockets, but we will just simulate this for now.</p>
 
+<p>Here is how the finished logging table application looks like. Feel free to play around with it.</p>
 
+<div class="panel panel-default">
+  <div class="panel-body">
+  
+<a id="addapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-plus"></span> Add App
+</a>
+<a id="removeapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-minus"></span> Remove App
+</a>
+<a id="updateapp" class="btn btn-default" role="button">
+    <span class="glyphicon glyphicon-pencil"></span> Update message count
+</a>
+<br><br>
 <div id="nestedUpdateExample"></div>
+ </div>
+</div>
 
 
+<script type="text/javascript" src="/javascripts/d3example/createtable.js"></script>
 
 
-<script type="text/javascript">
-(function () {
-    "use strict";
-    var data = [];
-    data.push({ name: 'Application1', logCounts: { DEBUG: 8, INFO: 12, WARN: 32, ERROR: 47, FATAL: 5 } });
-    data.push({ name: 'Application1', logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
+<p>Try it out on jsFiddle: <a href="http://jsfiddle.net/skropp/k43r9qmc/10/">http://jsfiddle.net/skropp/k43r9qmc/10/</a></p>
 
-    function renderLoop(data) {
-        if (data.length > 0) {
-            var keys = d3.keys(data[0].logCounts);
-            var table = d3.select("#nestedUpdateExample").append("table").attr("class","table table-striped");
-
-            var header = table.append("thead").attr("id", "header").append("tr");
-
-            header = header.selectAll("tr").data(function (d,i) {
-                // Add "Application Name" to the header data
-                var headerRowData = ["Application Name"];
-                return headerRowData.concat(keys);
-            });
-            
-            header.enter().append("td").text(function (d) {
-                return d;
-            });
-
-            var tbody = table.append("tbody");
-            var row = tbody.selectAll("tr").data(data);
-            
-            row.enter().append("tr");
-            row.exit().remove();
-            
-            var cell = row.selectAll("td").data(function (d, i) {
-                var rowdata = [{ name: "app", value: d.name }];
-                rowdata = rowdata.concat(keys.map(function (keyname) {
-                    return { name: keyname, value: d.logCounts[keyname] };
-                }));
-            return rowdata;
-        });
-
-        cell.text(function (count) {
-            return count.value;
-        });
-
-        cell.enter().append("td").text(function (count) {
-            return count.value;
-        });
-            
-        } else {
-            var message = d3.select("#nestedUpdateExample").append("p").text("Error: No data to display!").transition().style("color", "red");
-
-            return;
-        }
-    };
-
-    renderLoop(data);
-
-    d3.select("#updateapp").on("click", function (d) {
-        if (data.length > 0) {
-            data[0].logCounts["INFO"] += 1;
-            update(data);
-        }
-    });
-
-    d3.select("#addapp").on("click", function (d) {
-        data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
-        update(data);
-    });
-
-    d3.select("#removeapp").on("click", function (d) {
-        data.pop();
-        update(data);
-    });
-
-    function makeid() {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    }
-    ;
-})();
-</script>
-
-
-
-
-<!--script type="text/javascript">
-
-var data = [
-    { name: &#8216;CARA&#8217;, logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } }
-];
-
-var keys = d3.keys(data[0].logCounts);
-
-if (data.length > 0) {
-    var table = d3.select(&#8220;#nestedUpdateExample&#8221;).append(&#8220;table&#8221;);
-
-    var header = table.append(&#8220;thead&#8221;).attr(&#8220;id&#8221;, &#8220;header&#8221;).append(&#8220;tr&#8221;);
-
-    header.append(&#8220;td&#8221;).text(&#8220;app&#8221;);
-    header.selectAll(&#8220;td&#8221;).data(keys).enter().append(&#8220;td&#8221;).text(function (d) {
-        return d;
-    });
-
-    var tbody = table.append(&#8220;tbody&#8221;);
-}
-
-function update(data) {
-    var row = tbody.selectAll(&#8220;tr&#8221;).data(data);
-
-    row.enter().append(&#8220;tr&#8221;).append(&#8220;td&#8221;).text(data.name);
-
-    row.exit().remove();
-
-    var cell = row.selectAll(&#8220;td&#8221;).data(function (d, i) {
-        var rowdata = [{ name: &#8220;app&#8221;, value: d.name }];
-        rowdata = rowdata.concat(keys.map(function (keyname) {
-            return { name: keyname, value: d.logCounts[keyname] };
-        }));
-        return rowdata;
-    });
-
-    cell.text(function (count) {
-        return count.value;
-    });
-
-    cell.enter().append(&#8220;td&#8221;).text(function (count) {
-        return count.value;
-    });
-}
-;
-
-update(data);
-
-d3.select(&#8220;#updateapp&#8221;).on(&#8220;click&#8221;, function (d) {
-    if (data.length > 0) {
-        data[0].logCounts[&#8220;INFO&#8221;] += 1;
-        update(data);
-    }
-});
-
-d3.select(&#8220;#addapp&#8221;).on(&#8220;click&#8221;, function (d) {
-    data.push({ name: makeid(), logCounts: { DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, FATAL: 5 } });
-    update(data);
-});
-
-d3.select(&#8220;#removeapp&#8221;).on(&#8220;click&#8221;, function (d) {
-    data.pop();
-    update(data);
-});
-
-function makeid() {
-    var text = &#8220;&#8221;;
-    var possible = &#8220;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#8221;;
-
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-;
-</script-->
+<p>You can easily adapt this pattern to show nested bar charts or similar.</p>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/09/04/d3-update-pattern-on-nested-data/">Read on &rarr;</a>
+    </footer>
   
 
 
