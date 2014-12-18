@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization/</loc>
+    <lastmod>2014-12-17T11:22:31-05:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://sebastian.kropponline.de/blog/2013/09/04/d3-update-pattern-on-nested-data/</loc>
     <lastmod>2013-09-04T00:00:00-04:00</lastmod>
     <priority>0.8</priority>
@@ -23,17 +29,41 @@
   
   <url>
     <loc>http://sebastian.kropponline.de/blog/archives/</loc>
-    <lastmod>2014-10-07T21:46:25-04:00</lastmod>
+    <lastmod>2014-12-18T11:04:51-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://sebastian.kropponline.de/</loc>
-    <lastmod>2014-10-07T21:46:25-04:00</lastmod>
+    <lastmod>2014-12-18T11:04:51-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
+  
+  <url>
+    <loc>http://sebastian.kropponline.de/intervention-optimization-engine/chart.html</loc>
+    <lastmod>2014-11-10T20:56:20Z</lastmod>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://sebastian.kropponline.de/intervention-optimization-engine/demo.html</loc>
+    <lastmod>2014-11-04T22:14:58Z</lastmod>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://sebastian.kropponline.de/intervention-optimization-engine/index.html</loc>
+    <lastmod>2014-12-17T16:24:19Z</lastmod>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://sebastian.kropponline.de/intervention-optimization-engine/index_sav.html</loc>
+    <lastmod>2014-11-04T22:00:21Z</lastmod>
+    <priority>0.6</priority>
+  </url>
   
 </urlset>

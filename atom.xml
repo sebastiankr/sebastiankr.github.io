@@ -4,7 +4,7 @@
   <title><![CDATA[Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2014-10-07T21:46:25-04:00</updated>
+  <updated>2014-12-18T11:04:51-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Health Care Intervention Optimization]]></title>
+    <link href="http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization/"/>
+    <updated>2014-12-17T11:22:31-05:00</updated>
+    <id>http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization</id>
+    <content type="html"><![CDATA[<p><a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">Intervention Optimization Engine</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[D3 Update Pattern on Nested Data]]></title>
