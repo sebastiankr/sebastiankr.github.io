@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://sebastiankr.github.io/sitemap.xml 
+Sitemap: http://sebastian.kropponline.de/sitemap.xml 

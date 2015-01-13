@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Big Data Visualization and D3 - Sebastian Kropp</title>
+  <meta name="author" content="Sebastian Kropp">
+
+  
+  <meta name="description" content="D3.js is a great JavaScript library to visualize data. Visualization is an overlooked aspect of the Big Data picture. The real value of data is to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sebastian Kropp" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-54077795-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sebastian Kropp</a></h1>
+  
+    <h2>Science, Technology and Enterprise Architecture Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sebastian.kropponline.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Big Data Visualization and D3</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://sebastian.kropponline.de">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://d3js.org/">D3.js</a> is a great JavaScript library to visualize data. Visualization is an overlooked aspect of the Big Data picture. The real value of data is to gain an understanding and act accordingly. Visualization is a great way to make data understandable.</p>
+
+<p>Additionally, as we look closer at &ldquo;Velocity&rdquo; as one of the 3Vs of Big Data, we need mechanisms to ingest and show events immediately. We need libraries that are compatible with our Event-driven architectures. Hey, we finally have WebSockets, let&rsquo;s use them! Maintaining report schedules and running batch processes is so 1990ies and a huge overhead.</p>
+
+<p><img src="/images/d3/d3theme.jpg" title="D3 Theme" ></p>
+
+<!-- more -->
+
+
+<p>The D3 programming model is declarative and the developer is in full control to express data visually. It has many benefits over other libraries in this area:</p>
+
+<ul>
+<li>easy to show changes in data (updates and transitions)</li>
+<li>powerful declarative model</li>
+<li>easy to learn (lots of <a href="https://github.com/mbostock/d3/wiki/Gallery">examples</a>)</li>
+<li>manipulates native DOM elements (reuse your knowledge in CSS, HTML, SVG)</li>
+<li>very modular (you do not need everything)</li>
+<li>composable (plays nice with others)</li>
+</ul>
+
+
+<h3>How does it compare to JQuery or MVC/MVVM concepts like Angular.js or Knockout.js?</h3>
+
+<p>There is a substantial overlap between these three library concepts. The all have a different focus. But it is sometimes not easy to decide in which case to use which library. They can be used together of course, but here are some guidelines to help you decide.</p>
+
+<h4>JQuery</h4>
+
+<p>D3 can do a lot of what JQuery does in a similar way. Granted, it does not have such a rich gallery of plugins that make JQuery ideal for rapid development. But D3 can be used to attach event handlers to any DOM element or make AJAX data calls as well. JQuery is imperative and gets hard to maintain. I have not worked on a maturing D3 codebase as much as I had to fix bloated JQuery code. Because of D3&rsquo;s declarative nature I am sure that D3 code will not get messy as fast as JQuery code.</p>
+
+<h4>Angular.js/Knockout.js</h4>
+
+<p>Contrary to Angular or Knockout, D3 is not based on templates. These templates help to understand the initial DOM. D3 could be used with an initial DOM structure as well, it is better to completely construct the part of the DOM from scratch. This helps to create encapsulated modules. These modules could be used/attach on any host element in the DOM. It is probably easy to inject D3 functionality into the <a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a>, once they are supported by all browsers. If data is changing the initial template completely, templates could be counterproductive. An example would be you start with a <code>table</code> and get data that requires you to switch over to a <code>SVG</code>. Angular.js offers obviously much more in terms of MVC encapsulation, site navigation/history etc. But it is amazing how much similarity and overlap there is. Core to all of them is the data binding and selectors. D3 is the only real declarative option. There are still a lot of for loops in Angular/Knockout templates. You could probably tweak Angular to do the same things as D3 and vice versa. But I would recommend using the different libraries in conjunction and use them according to their respective focus. And yes agreed, that is sometimes easier said than done, especially with Angular.js.</p>
+
+<p>There are also some downsides to D3. There is this issues that all these libraries have with SEO. Or rather it is Google&rsquo;s and Bing’s problem that their crawlers are not indexing JavaScript generated DOMs. This has to change! Another issue with D3 is that it is sometimes hard to understand the side effects, especially if working with nested data. For example if you have multiple pie charts which need to appear and disappear, and these charts have changing data themselves. This is especially hard for programmers who have little experience with functional languages/concepts.</p>
+
+<p>Hopefully I will be able to find some time to write a post about update patterns on nested data eventually to show you how this can be done with D3.</p>
+
+<p><strong>[Update 05/22/2013]</strong>
+<em>I finally got around to write something up. Have a look at <a href="/blog/2013/05/22/d3-update-pattern-on-nested-data">D3 Update Pattern on Nested Data</a>. This will help you to understand how to handle updates to nested data.</em></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sebastian Kropp</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-12'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/big-data/'>big data</a>, <a class='category' href='/blog/categories/d3/'>d3</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/visualization/'>visualization</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3/" data-via="" data-counturl="http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/22/how-hadoop-does-not-scale/" title="Next Post: How Hadoop does not scale">How Hadoop does not scale &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/health-care-intervention-optimization/">Health Care Intervention Optimization</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/04/d3-update-pattern-on-nested-data/">D3 Update Pattern on Nested Data</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/22/how-hadoop-does-not-scale/">How Hadoop Does Not Scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/big-data-visualization-and-d3/">Big Data Visualization and D3</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sebastiankr">@sebastiankr</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sebastiankr',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+     <h1>Twitter</h1>
+     <a class="twitter-timeline" href="https://twitter.com/SebKropp" data-widget-id="547159711335079936">Tweets by @SebKropp</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+ </section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Sebastian Kropp -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'eascientific';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3/';
+        var disqus_url = 'http://sebastian.kropponline.de/blog/2013/02/12/big-data-visualization-and-d3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
