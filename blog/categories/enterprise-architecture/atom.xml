@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Enterprise Architecture | Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/blog/categories/enterprise-architecture/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2015-01-18T22:44:49-05:00</updated>
+  <updated>2015-01-19T13:48:13-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -22,20 +22,18 @@
 
 <p>The healthcare system in the US is changing rapidly. The Affordable Care Act (ACA) introduced regulations requiring insurers and providers to change at an unprecedented pace. Whether these changes are for the better or the worse depends on your perspective. But actors not able to adapt to the new lay of the land are going to be left behind.</p>
 
-<p>So what has changed? The trajectory in front of us is clear. Even the ACA is just one step on that path. Health care is becoming more complex and competitive with more government involvement. This progression started with the Social Security Act creating Medicare and Medicate services. Along the way we have seen the government opening up Medicare to private players. Now, the ACA extends parts of this model into the commercial space.</p>
+<p>So what has changed? The ACA is or was politically very contentious. So it might be surprising to some, that if not the ACA, something similar would have been put in place. Looking at the <a href="https://en.wikipedia.org/wiki/History_of_health_care_reform_in_the_United_States">history of health care reform in the United States</a> it becomes clear that the main trajectory remained the same. All these reforms are increasing the pressure for improved health care with a market based philosophy in mind.</p>
 
 <!-- more -->
 
 
-<p>HIPAA is another example of how the government creates rules for increased competition in the health care system. The pressure to participate in this market is increasing and things like preventive care, measuring quality of care, risk adjustment, and health care effectiveness are becoming more important.</p>
+<p>Health care is becoming more complex and competitive along with more government involvement and oversight. We have seen the government opening up Medicare to private players. Now the ACA extends parts of this model and experience into the commercial space. The pressure to participate in these markets will increase and things like preventive care, measuring quality of care, risk adjustment, and health care effectiveness are becoming increasingly important. This trend is accelerating and it does not matter if it is driven by Republicans or Democrats. The core of the problem remains fundamentally the same. As lifespans are increasing, care becomes more expensive and we have a resource constrained environment trying to address rapidly increasing complexity. Addressing <a href="https://en.wikipedia.org/wiki/Comorbidity">comorbidity</a> is a next step and will catapult us into another dimension of complexity.</p>
 
-<p>This trend is accelerating and it does not matter who is leading the government. That might be surprising to some. But going forward, there are two options. Both will incur change. Either the ACA will be changed and supported by new legislation, or the ACA be repealed. This will result in even more change.</p>
+<p>The health care system, with all its legacy systems and inefficiencies, has issues coping with this accelerated rate of change. This opens up opportunities for innovation and disruptions in the industry.</p>
 
-<p>This is because the core of the problem remains fundamentally the same.  We all are getting older, care becomes more expensive and we have a resource constrained environment trying to address <a href="https://en.wikipedia.org/wiki/Comorbidity">comorbidity</a> problems. The health care system, with all its legacy systems and inefficiencies, has issues coping with that rate of change. That is great! It opens up opportunities for innovation and disruptions in the industry. Let us all build a better health care system!</p>
+<h3>How can Enterprise Architecture help?</h3>
 
-<h3>Enterprise Architecture Model</h3>
-
-<p>How can Enterprise Architecture (EA) help? EA enables meaningful adaptation to change for organizations. In this context meaningful means that the enterprise is able to evolve according corporate objectives and strategy.</p>
+<p>Enterprise Architecture (EA) enables meaningful adaptation to change for organizations. In this context meaningful means that the enterprise is able to evolve according corporate objectives and strategy.</p>
 
 <p>The practice of modeling and abstraction is essential to be able to properly reason about change. Just being able to look at a high level and holistic design goes a long way. EA helps to understand risks and opportunities and develops a common understanding within the organization.</p>
 
@@ -45,14 +43,14 @@
 
 <p>This value chain diagram of a health plan depicts the functional areas to perform interventions to improve quality measure reporting, risk adjustment outcomes and eventually the health care outcome for its members. These are core business functions for health plans and are becoming increasingly important under the ACA.</p>
 
-<p>This model represents a feedback loop, which aligns very well with the problem at hand. The government is constantly raising the bar. In the <a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> system, health plans get a worse rating if they are just as successful as last year. Competing plans improve their quality of care and the individual plan risks getting left behind.
+<p>This model represents a feedback loop, which aligns very well with the problem at hand. The government is constantly raising the bar. In the <a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> system, health plans get a worse rating if they are just as successful as last year. If competing plans improve their quality of care, individual plans not doing that risk getting left behind.
 This system needs to continuously improve and can do so via feedback learning. How many mammograms can we do? What is the most successful intervention type for colonoscopies? Which members are better contacted by phone, which ones by mail? Which members are likely to develop a condition so that it can be diagnosed as early as possible and thereby improve the capitated risk adjustment outcome?</p>
 
 <p><strong>Data Integration</strong>: Data Integration groups all processes concerned with communication and transformation of data. These processes include functions like reporting data to HHS/CMS, retrieve data from members,   integrate with EHR systems, transformation, improve data quality, and many more. This area requires expertise with health care data standards like HIPAA 5010 (<a href="http://x12.org/">ASC X12</a>, 837 Claims), <a href="https://en.wikipedia.org/wiki/Health_Level_7">HL7</a>, and the many semi-standardized tab delimited or fixed width files demanded by HHS/CMS.</p>
 
 <p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
 
-<p><strong>Risk Adjustment Gap Identification</strong>: Risk adjustment is based on rules defined by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improves the adjustment outcome. At the same time it can substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplaces and Medicare/Medicate plans (RAPS/HIX edge server). More details about risk adjustment can be found in the beautifully compiled report published by CMS with the name “<a href="http://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Downloads/Evaluation_Risk_Adj_Model_2011.pdf">Evaluation of the CMS-HCC Risk Adjustment Model</a>”</p>
+<p><strong>Risk Adjustment Gap Identification</strong>: Risk adjustment is based on rules defined by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improves the adjustment outcome. At the same time it can substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplaces and Medicare/Medicaid plans (RAPS/HIX edge server). More details about risk adjustment can be found in the report published by CMS with the name “<a href="http://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Downloads/Evaluation_Risk_Adj_Model_2011.pdf">Evaluation of the CMS-HCC Risk Adjustment Model</a>”</p>
 
 <p><strong>Intervention Optimization</strong>: Intervention Optimization is downstream from Gap Identification processes. Every intervention has a cost and a potential value for closing the gap. Optimizing on this is constrained by several rules. The goal is to find the best execution plan for a given budget across the population. Probabilities guide which type of intervention and when to conduct an intervention on a specific member.</p>
 
