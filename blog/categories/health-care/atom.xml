@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Health Care | Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/blog/categories/health-care/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2015-01-19T13:48:13-05:00</updated>
+  <updated>2015-01-19T16:58:55-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Health Care Intervention Optimization]]></title>
+    <link href="http://sebastian.kropponline.de/blog/2015/01/14/health-care-intervention-optimization/"/>
+    <updated>2015-01-14T11:22:31-05:00</updated>
+    <id>http://sebastian.kropponline.de/blog/2015/01/14/health-care-intervention-optimization</id>
+    <content type="html"><![CDATA[<p>This series of posts details an enterprise architecture (EA) for health care. Feel free to have a look at the other posts in this series:</p>
+
+<ol>
+<li><a href="/blog/2015/01/12/enterprise-architecture-for-health-care/">Enterprise Architecture for Health Care</a></li>
+<li>Health Care Intervention Optimization (<em>this post</em>)</li>
+</ol>
+
+
+<p>This post focuses on the <em>Intervention Optimization</em>.</p>
+
+<p><img class="center" src="/images/healthcare/gap-intervention-focus-optimization.png" width="700" title="Intervention Optimization" ></p>
+
+<p>Starting with intervention optimization requires us to think about the output of <em>gap identification processes</em> and the input to <em>intervention execution systems</em>. Starting with the core of a system is a good idea. Intervention optimization is at the center in this case and once designed, gap identification and intervention execution will fall into place almost automatically.
+The following model is the basis for the <em>Intervention Optimization Engine</em> (IOE) application. <strong>Try it out <a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">here</a>.</strong></p>
+
+<!-- more -->
+
+
+<p>The <em>Intervention Optimization Engine</em> receives gaps from downstream applications. Every <em>gap identification system</em> determines the likelihood of a gap existing, the value of a gap, and its cost. These gaps are send to the IOE and it determines which interventions should optimally be executed under given a certain budget. It then creates a utilization plan by trying to spread out the interventions as evenly as possible across the year. This avoids peaks and an even utilization of intervention processes reduces costs.</p>
+
+<h3>The Data Model</h3>
+
+<p>But what are gaps and how do they relate to interventions? A logical data model helps to understand the relations and supports a common vocabulary/taxonomy.</p>
+
+<p><img class="center" src="/images/healthcare/gap-intervention-data-model.png" width="650" title="Intervention Data Model" ></p>
+
+<p>A <em>party</em> has associated gaps. A party is either an individual or an organization. In our case it is either a provider or a member.</p>
+
+<p>For our purpose, a <em>gap</em> is something that can be intervened upon. That means that there is a business process that, when executed, can potentially close that gap. An <em>intervention type</em> is exactly one of those business processes. A <em>gap</em> could have multiple possible intervention types associated with it. As an example:</p>
+
+<p>The current demo of the IOE has three types of interventions available.
+<em>MEOT</em> stands for a member educational outreach via telephone. An educational outreach via mail is a <em>MEOM</em> and <em>IHA</em> is an in-home assessment. There are potentially many more, but it does not matter to the IOE. It is agnostic of details for intervention types. The <em>intervention execution systems</em> know how to conduct these interventions. This is a nice separation of concerns. <em>Intervention execution systems</em> can access the intervention plan of the IOE. They then pick interventions form the plan, which does not necessary have to be in order. <em>Intervention execution systems</em> could potentially have their own little intelligence build in.</p>
+
+<p>After selection of each intervention, the IOE gets notified and the intervention gets taken out of the optimization and planning process by setting the status from <code>Planned</code> to <code>Started</code>.  This can be simulated with the demo. Interventions have two basic outcomes. Either they are successful and the value for the health plan has been generated or they are unsuccessful and only the cost have been incurred without any benefit for the plan. There are more states for interventions, which can be depicted with a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a>. These states can be used for nice visualization to give an overview of the current performance.</p>
+
+<h3>Intervention Optimization Engine</h3>
+
+<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine that I developed. Features are:</p>
+
+<ul>
+<li>Full <em>optimization under a second</em> for a plan with up to 500,000 members
+
+<ul>
+<li>enables point of care decisions</li>
+</ul>
+</li>
+<li><em>No human involvement</em> necessary because algorithm creates the optimal solution
+
+<ul>
+<li>Weights can still be adjusted and interventions be forced (deviates from optimum)</li>
+</ul>
+</li>
+<li>Optimization <em>across all Intervention Types</em></li>
+<li>Optimization includes <em>probabilities for intervention success</em></li>
+<li>Optimization includes <em>probabilities of gap existence</em></li>
+<li>Can include all intervention types</li>
+<li>Advanced reporting</li>
+<li>Easy integration of new gaps and interventions</li>
+<li>Accounting for not conducting interventions</li>
+</ul>
+
+
+<p>Try out the <strong><a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">Intervention Optimization Engine</a></strong> and let me know if you have any questions.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Enterprise Architecture for Health Care]]></title>
@@ -67,52 +138,6 @@ This system needs to continuously improve and can do so via feedback learning. H
 <p><strong>Intervention</strong>: Intervention is the act or the process of addressing a gap with the goal to close that gap. There could be just one exclusive intervention per gap or multiple simulations interventions per gap. If an intervention requires exclusivity, other interventions cannot be conducted while the current exclusive intervention is on-going.</p>
 
 <p>Future posts will detail this model further. So stay tuned!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Health Care Intervention Optimization]]></title>
-    <link href="http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization/"/>
-    <updated>2014-12-17T11:22:31-05:00</updated>
-    <id>http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization</id>
-    <content type="html"><![CDATA[<p>The health care system in the US is changing rapidly. The Affordable Care Act introduced regulations requiring health insurers and providers to change at an unprecedented pace.</p>
-
-<h4>Enterprise Architecture Model</h4>
-
-<p>Enterprise Architecture (EA) can help to accelerate meaningful change in health organizations. In this example I am highlighting parts of an EA model focused on intervention optimization and planning. This high level business model shows only parts of the core processes of a health plan/insurer and does not highlight underlying and cross cutting functionalities like Security and Data Analytics. I used this model to developed the <em>Intervention Optimization Engine</em>, which can be tried out <a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">here</a>.</p>
-
-<p><strong>Intervention Optimization</strong> is down-stream of processes which are identifying gaps. Gap identification requires ever more sophisticated data analytic and predictive analytic capabilities.</p>
-
-<p><img class="center" src="/images/healthcare/gap-intervention-process.png" width="650" title="Intervention Process" ></p>
-
-<!-- more -->
-
-
-<p><strong>Data Integration</strong>: Involves processes around health care data transformation, inbound and outbound data, internal interfaces, and data quality. Examples are EHR integration, HHS/CMS reporting, intake of administrative and claims data, HIPAA 5010 (<a href="http://x12.org/">ASC X12</a>, 837 Claims), <a href="https://en.wikipedia.org/wiki/Health_Level_7">HL7</a>, and others.</p>
-
-<p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
-
-<p><strong>Risk Adjustment Gap Identification</strong>: Risk Adjustment uses predictive analytics to identify gaps between what is reported to HHS/CMS for adjustment purposes. These approach is the same among commercial HIE or Medicare/Medicate plans (RAPS).</p>
-
-<p><strong>Intervention Optimization</strong>: Every intervention has a cost and a potential value for closing the gap. Optimizing on this is also constrained by several rules. Goal is to calculate the optimal execution plan for a given budget over the whole population.</p>
-
-<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention itself happens. Result from that intervention feeds back into the analytical cycle.</p>
-
-<h4>Data Model</h4>
-
-<p>What are gaps and how do they relate to interventions? Let us start laying the foundation with modeling subject areas and the data model to support the common vocabulary/taxonomy:</p>
-
-<p><img class="center" src="/images/healthcare/gap-intervention-data-model.png" width="650" title="Intervention Data Model" ></p>
-
-<p>Member: This is an individual person that is or has been enrolled with a health plan. CMS calls them beneficiaries and provider refer to them as patients. Choose the right level for your setting.</p>
-
-<p>Gap: Gap is an identified undesirable state. It could be a gap in care or an information gap. Examples are that a member has not received a Mammogram</p>
-
-<h4>Intervention Optimization Engine</h4>
-
-<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine that I developed. Features are:</p>
-
-<p><a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">Intervention Optimization Engine</a></p>
 ]]></content>
   </entry>
   
