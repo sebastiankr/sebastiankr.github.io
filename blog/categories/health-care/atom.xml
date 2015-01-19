@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Health Care | Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/blog/categories/health-care/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2015-01-13T16:50:39-05:00</updated>
+  <updated>2015-01-18T22:41:49-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -14,13 +14,72 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Enterprise Architecture for Health Care]]></title>
+    <link href="http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care/"/>
+    <updated>2015-01-12T17:08:44-05:00</updated>
+    <id>http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care</id>
+    <content type="html"><![CDATA[<h3>Accelerating Change</h3>
+
+<p>The healthcare system in the US is changing rapidly. The Affordable Care Act (ACA) introduced regulations requiring insurers and providers to change at an unprecedented pace. Whether these changes are for the better or the worse depends on your perspective. But actors not able to adapt to the new lay of the land are going to be left behind.</p>
+
+<p>So what has changed? The trajectory in front of us is clear. Even the ACA is just one step on that path. Health care is becoming more complex and competitive with more government involvement. This progression started with the Social Security Act creating Medicare and Medicate services. Along the way we have seen the government opening up Medicare to private players. Now, the ACA extends parts of this model into the commercial space.</p>
+
+<!-- more -->
+
+
+<p>HIPAA is another example of how the government creates rules for increased competition in the health care system. The pressure to participate in this market is increasing and things like preventive care, measuring quality of care, risk adjustment, and health care effectiveness are becoming more important.</p>
+
+<p>This trend is accelerating and it does not matter who is leading the government. That might be surprising to some. But going forward, there are two options. Both will incur change. Either the ACA will be changed and supported by new legislation, or the ACA be repealed. This will result in even more change.</p>
+
+<p>This is because the core of the problem remains fundamentally the same.  We all are getting older, care becomes more expensive and we have a resource constrained environment trying to address <a href="https://en.wikipedia.org/wiki/Comorbidity">comorbidity</a> problems. The health care system, with all its legacy systems and inefficiencies, has issues coping with that rate of change. That is great! It opens up opportunities for innovation and disruptions in the industry. Let us all build a better health care system!</p>
+
+<h3>Enterprise Architecture Model</h3>
+
+<p>How can Enterprise Architecture (EA) help? EA enables meaningful adaptation to change for organizations. In this context meaningful means that the enterprise is able to evolve according corporate objectives and strategy.</p>
+
+<p>The practice of modeling and abstraction is essential to be able to properly reason about change. Just being able to look at a high level and holistic design goes a long way. EA helps to understand risks and opportunities and develops a common understanding within the organization.</p>
+
+<p>The following shows how EA can be used to align business with IT by looking at a subset of an EA model for a health plan. This model is generic enough that it can be applied to Accountable Care Organizations (ACO) or other similar types of organizations.</p>
+
+<p><img class="center" src="/images/healthcare/gap-intervention-process.png" width="700" title="Intervention Process" ></p>
+
+<p>This value chain diagram of a health plan depicts the functional areas to perform interventions to improve quality measure reporting, risk adjustment outcomes and eventually the health care outcome for its members. These are core business functions for health plans and are becoming increasingly important under the ACA.</p>
+
+<p>This model represents a feedback loop, which aligns very well with the problem at hand. The government is constantly raising the bar. In the <a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> system, health plans get a worse rating if they are just as successful as last year. Competing plans improve their quality of care and the individual plan risks getting left behind.
+This system needs to continuously improve and can do so via feedback learning. How many mammograms can we do? What is the most successful intervention type for colonoscopies? Which members are better contacted by phone, which ones by mail? Which members are likely to develop a condition so that it can be diagnosed as early as possible and thereby improve the capitated risk adjustment outcome?</p>
+
+<p><strong>Data Integration</strong>: Data Integration groups all processes concerned with communication and transformation of data. These processes include functions like reporting data to HHS/CMS, retrieve data from members,   integrate with EHR systems, transformation, improve data quality, and many more. This area requires expertise with health care data standards like HIPAA 5010 (<a href="http://x12.org/">ASC X12</a>, 837 Claims), <a href="https://en.wikipedia.org/wiki/Health_Level_7">HL7</a>, and the many semi-standardized tab delimited or fixed width files demanded by HHS/CMS.</p>
+
+<p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
+
+<p><strong>Risk Adjustment Gap Identification</strong>: Risk adjustment is based on rules defined by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improves the adjustment outcome. At the same time it can substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplaces and Medicare/Medicate plans (RAPS/HIX edge server). More details about risk adjustment can be found in the beautifully compiled report published by CMS with the name “<a href="http://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Downloads/Evaluation_Risk_Adj_Model_2011.pdf">Evaluation of the CMS-HCC Risk Adjustment Model</a>”</p>
+
+<p><strong>Intervention Optimization</strong>: Intervention Optimization is downstream from Gap Identification processes. Every intervention has a cost and a potential value for closing the gap. Optimizing on this is constrained by several rules. The goal is to find the best execution plan for a given budget across the population. Probabilities guide which type of intervention and when to conduct an intervention on a specific member.</p>
+
+<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention processes are executed. Result from that intervention feeds back into the analytical cycle. The result of the intervention influences gap identification and also the next intervention plan.</p>
+
+<h4>Data Model</h4>
+
+<p>This model is based on <strong>Gaps</strong> and <strong>Interventions</strong>. So what are these within this EA model?</p>
+
+<p><img class="center" src="/images/healthcare/objective-gap-intervention-data-model.png" title="Objective Gap Intervention" ></p>
+
+<p><strong>Gap</strong>: A gap is an identified undesirable state with a certain probability of existence. It could be a gap in care or a data gap. Some types of gaps can be addressed. Addressing gaps tries to improve the overall state for a system. Gaps might exist, which cannot be addressed. Gaps are directly linked to a measurable objective. Objectives define what it means to <em>improve</em>.</p>
+
+<p><strong>Intervention</strong>: Intervention is the act or the process of addressing a gap with the goal to close that gap. There could be just one exclusive intervention per gap or multiple simulations interventions per gap. If an intervention requires exclusivity, other interventions cannot be conducted while the current exclusive intervention is on-going.</p>
+
+<p>Future posts will detail this model further. So stay tuned!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Health Care Intervention Optimization]]></title>
     <link href="http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization/"/>
     <updated>2014-12-17T11:22:31-05:00</updated>
     <id>http://sebastian.kropponline.de/blog/2014/12/17/health-care-intervention-optimization</id>
     <content type="html"><![CDATA[<p>The health care system in the US is changing rapidly. The Affordable Care Act introduced regulations requiring health insurers and providers to change at an unprecedented pace.</p>
 
-<h3>Enterprise Architecture Model</h3>
+<h4>Enterprise Architecture Model</h4>
 
 <p>Enterprise Architecture (EA) can help to accelerate meaningful change in health organizations. In this example I am highlighting parts of an EA model focused on intervention optimization and planning. This high level business model shows only parts of the core processes of a health plan/insurer and does not highlight underlying and cross cutting functionalities like Security and Data Analytics. I used this model to developed the <em>Intervention Optimization Engine</em>, which can be tried out <a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">here</a>.</p>
 
@@ -35,52 +94,27 @@
 
 <p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
 
-<p><strong>Risk Adjustment Gap Identification</strong>: Risk Adjustment is based on rules set forth by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improve the adjustment outcome. At the same time it helps to substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplace and Medicare/Medicate plans (RAPS/HIX edge server).</p>
+<p><strong>Risk Adjustment Gap Identification</strong>: Risk Adjustment uses predictive analytics to identify gaps between what is reported to HHS/CMS for adjustment purposes. These approach is the same among commercial HIE or Medicare/Medicate plans (RAPS).</p>
 
-<p><strong>Intervention Optimization</strong>: Every intervention has a cost and a potential value for closing the gap. Optimizing on this is constrained by several rules. The goal is to find the best execution plan for a given budget across the population. Probabilities guide which type of intervention and when to conduct on a specific member.</p>
+<p><strong>Intervention Optimization</strong>: Every intervention has a cost and a potential value for closing the gap. Optimizing on this is also constrained by several rules. Goal is to calculate the optimal execution plan for a given budget over the whole population.</p>
 
-<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention processes are executed. Result from that intervention feeds back into the analytical cycle. The result of the intervention influences gap identification and also the next interventions plan.</p>
+<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention itself happens. Result from that intervention feeds back into the analytical cycle.</p>
 
-<h3>Data Model</h3>
+<h4>Data Model</h4>
 
-<p>What are gaps and how do they relate to interventions? A logical data model helps to understand the relations and supports a common vocabulary/taxonomy.</p>
+<p>What are gaps and how do they relate to interventions? Let us start laying the foundation with modeling subject areas and the data model to support the common vocabulary/taxonomy:</p>
 
 <p><img class="center" src="/images/healthcare/gap-intervention-data-model.png" width="650" title="Intervention Data Model" ></p>
 
-<p>A <strong>Party</strong> has associated gaps. A party is either an individual or an organization. In our case it is either a provider or a member.</p>
+<p>Member: This is an individual person that is or has been enrolled with a health plan. CMS calls them beneficiaries and provider refer to them as patients. Choose the right level for your setting.</p>
 
-<p>For our purpose a <strong>Gap</strong> is something that can be intervened upon, meaning that there is a business process that, when executed, can close the gap. An <strong>Intervention Type</strong> is exactly one of those business processes and a <strong>Gap</strong> could have multiple possible intervention types associated with it. A telephonic member educational outreach (MEOT) could be one intervention type. The <strong>Intervention Optimization Engine</strong> also has In-home Assessment (IHA) and a member educational outreach via mail (MEOM) as examples. But for the purpose of optimization and planning, it does not matter what kind of intervention is used. The <strong>Intervention Execution Engine</strong> (IEE) can select to conduct an Intervention and knows the details on to do it. This is a nice separation of concerns. Once the IEE is starting an intervention, the status is changing from <code>Planned</code> to <code>Started</code>. There are more states for interventions, which can be nicely depicted with a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a>.</p>
+<p>Gap: Gap is an identified undesirable state. It could be a gap in care or an information gap. Examples are that a member has not received a Mammogram</p>
 
-<h3>Intervention Optimization Engine</h3>
+<h4>Intervention Optimization Engine</h4>
 
 <p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine that I developed. Features are:</p>
 
-<ul>
-<li>Full <em>optimization under a second</em> for a plan with up to 500,000 members
-
-<ul>
-<li>enables point of care decisions</li>
-</ul>
-</li>
-<li><em>No human involvement</em> necessary because algorithm creates the optimal solution
-
-<ul>
-<li>Weights can still be adjusted and interventions be forced (deviates from optimum)</li>
-</ul>
-</li>
-<li>Optimization <em>across all Intervention Types</em></li>
-<li>Optimization includes <em>probabilities for intervention success</em></li>
-<li>Optimization includes <em>probabilities of gap existence</em></li>
-<li>Can include all intervention types</li>
-<li>Advanced reporting</li>
-<li>Easy integration of new gaps and interventions</li>
-<li>Accounting for not conducting interventions</li>
-</ul>
-
-
 <p><a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">Intervention Optimization Engine</a></p>
-
-<p>Let me know if you are interested by leaving a comment!</p>
 ]]></content>
   </entry>
   

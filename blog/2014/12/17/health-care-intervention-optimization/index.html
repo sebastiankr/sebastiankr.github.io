@@ -101,7 +101,7 @@
 
 <div class="entry-content"><p>The health care system in the US is changing rapidly. The Affordable Care Act introduced regulations requiring health insurers and providers to change at an unprecedented pace.</p>
 
-<h3>Enterprise Architecture Model</h3>
+<h4>Enterprise Architecture Model</h4>
 
 <p>Enterprise Architecture (EA) can help to accelerate meaningful change in health organizations. In this example I am highlighting parts of an EA model focused on intervention optimization and planning. This high level business model shows only parts of the core processes of a health plan/insurer and does not highlight underlying and cross cutting functionalities like Security and Data Analytics. I used this model to developed the <em>Intervention Optimization Engine</em>, which can be tried out <a href="/intervention-optimization-engine/" target="_blank">here</a>.</p>
 
@@ -116,52 +116,27 @@
 
 <p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
 
-<p><strong>Risk Adjustment Gap Identification</strong>: Risk Adjustment is based on rules set forth by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improve the adjustment outcome. At the same time it helps to substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplace and Medicare/Medicate plans (RAPS/HIX edge server).</p>
+<p><strong>Risk Adjustment Gap Identification</strong>: Risk Adjustment uses predictive analytics to identify gaps between what is reported to HHS/CMS for adjustment purposes. These approach is the same among commercial HIE or Medicare/Medicate plans (RAPS).</p>
 
-<p><strong>Intervention Optimization</strong>: Every intervention has a cost and a potential value for closing the gap. Optimizing on this is constrained by several rules. The goal is to find the best execution plan for a given budget across the population. Probabilities guide which type of intervention and when to conduct on a specific member.</p>
+<p><strong>Intervention Optimization</strong>: Every intervention has a cost and a potential value for closing the gap. Optimizing on this is also constrained by several rules. Goal is to calculate the optimal execution plan for a given budget over the whole population.</p>
 
-<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention processes are executed. Result from that intervention feeds back into the analytical cycle. The result of the intervention influences gap identification and also the next interventions plan.</p>
+<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention itself happens. Result from that intervention feeds back into the analytical cycle.</p>
 
-<h3>Data Model</h3>
+<h4>Data Model</h4>
 
-<p>What are gaps and how do they relate to interventions? A logical data model helps to understand the relations and supports a common vocabulary/taxonomy.</p>
+<p>What are gaps and how do they relate to interventions? Let us start laying the foundation with modeling subject areas and the data model to support the common vocabulary/taxonomy:</p>
 
 <p><img class="center" src="/images/healthcare/gap-intervention-data-model.png" width="650" title="Intervention Data Model" ></p>
 
-<p>A <strong>Party</strong> has associated gaps. A party is either an individual or an organization. In our case it is either a provider or a member.</p>
+<p>Member: This is an individual person that is or has been enrolled with a health plan. CMS calls them beneficiaries and provider refer to them as patients. Choose the right level for your setting.</p>
 
-<p>For our purpose a <strong>Gap</strong> is something that can be intervened upon, meaning that there is a business process that, when executed, can close the gap. An <strong>Intervention Type</strong> is exactly one of those business processes and a <strong>Gap</strong> could have multiple possible intervention types associated with it. A telephonic member educational outreach (MEOT) could be one intervention type. The <strong>Intervention Optimization Engine</strong> also has In-home Assessment (IHA) and a member educational outreach via mail (MEOM) as examples. But for the purpose of optimization and planning, it does not matter what kind of intervention is used. The <strong>Intervention Execution Engine</strong> (IEE) can select to conduct an Intervention and knows the details on to do it. This is a nice separation of concerns. Once the IEE is starting an intervention, the status is changing from <code>Planned</code> to <code>Started</code>. There are more states for interventions, which can be nicely depicted with a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a>.</p>
+<p>Gap: Gap is an identified undesirable state. It could be a gap in care or an information gap. Examples are that a member has not received a Mammogram</p>
 
-<h3>Intervention Optimization Engine</h3>
+<h4>Intervention Optimization Engine</h4>
 
 <p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine that I developed. Features are:</p>
 
-<ul>
-<li>Full <em>optimization under a second</em> for a plan with up to 500,000 members
-
-<ul>
-<li>enables point of care decisions</li>
-</ul>
-</li>
-<li><em>No human involvement</em> necessary because algorithm creates the optimal solution
-
-<ul>
-<li>Weights can still be adjusted and interventions be forced (deviates from optimum)</li>
-</ul>
-</li>
-<li>Optimization <em>across all Intervention Types</em></li>
-<li>Optimization includes <em>probabilities for intervention success</em></li>
-<li>Optimization includes <em>probabilities of gap existence</em></li>
-<li>Can include all intervention types</li>
-<li>Advanced reporting</li>
-<li>Easy integration of new gaps and interventions</li>
-<li>Accounting for not conducting interventions</li>
-</ul>
-
-
 <p><a href="/intervention-optimization-engine/" target="_blank">Intervention Optimization Engine</a></p>
-
-<p>Let me know if you are interested by leaving a comment!</p>
 </div>
 
 
@@ -182,7 +157,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/data-modeling/'>data modeling</a>, <a class='category' href='/blog/categories/enterprise-architecture/'>enterprise architecture</a>, <a class='category' href='/blog/categories/health-care/'>health care</a>
+    <a class='category' href='/blog/categories/enterprise-architecture/'>enterprise architecture</a>, <a class='category' href='/blog/categories/health-care/'>health care</a>
   
 </span>
 
@@ -203,6 +178,8 @@
         <a class="basic-alignment left" href="/blog/2013/09/04/d3-update-pattern-on-nested-data/" title="Previous Post: D3 Update Pattern on Nested Data">&laquo; D3 Update Pattern on Nested Data</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/01/12/enterprise-architecture-for-health-care/" title="Next Post: Enterprise Architecture for Health Care">Enterprise Architecture for Health Care &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -220,6 +197,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/12/enterprise-architecture-for-health-care/">Enterprise Architecture for Health Care</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/12/17/health-care-intervention-optimization/">Health Care Intervention Optimization</a>
