@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://sebastian.kropponline.de/sitemap.xml 

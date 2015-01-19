@@ -1,0 +1,8 @@
+{
+	"project": "js",
+	"inputs": ["slider.js","knapsack.js", "app2.js","stackedBarChart.js"],
+	"output": "app2.min.js",
+	"generateMap": false,
+	"mangle": false,
+	"isolate": false
+}

@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How Hadoop Does Not Scale - Sebastian Kropp</title>
+  <meta name="author" content="Sebastian Kropp">
+
+  
+  <meta name="description" content="We currently read a lot about how good Hadoop scales by mapping data and processes out to commodity nodes. To disappoint you right away, this post &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sebastian Kropp" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-54077795-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sebastian Kropp</a></h1>
+  
+    <h2>Science, Technology and Enterprise Architecture Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sebastian.kropponline.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How Hadoop Does Not Scale</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-22'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://sebastian.kropponline.de">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/hadoop/hadoop-elephant.png" width="240" title="Hadoop Logo" ></p>
+
+<p>We currently read a lot about how good Hadoop scales by mapping data and processes out to commodity nodes. To disappoint you right away, this post is not a general criticism of Hadoop. I do not even want to argue that Hadoop does not scale logarithmically. There are already a lot of papers that look at which algorithms are suited for MapReduce.</p>
+
+<p>The purpose of this post is to look at slightly different aspects of scale, mostly aspects from an enterprise and financial viewpoint. The meaning of Hadoop changes rapidly. When I refer to Hadoop, I mean the traditional way of batch processing with MapReduce and not the amazing community of ambitious developers trying to find better ways for society to cope with the Big Data challenge.</p>
+
+<h3>Why Hadoop does not scale</h3>
+
+<!-- more -->
+
+
+<h4>Management and Costs</h4>
+
+<p>Let us start with the management problems associated with maintaining a lot of systems in a cluster. Every additional server puts a lot of pressure on an enterprise. It is not only capital expenditures and operational costs of maintaining the systems. There is also asset management, finance, budget planning, networking, increased energy costs, additional cooling, space requirements, and a lot of other things that need to be considered. Numbers for capital and operational expenses vary widely depending on the maturity of an organization. I would love to see studies on this topic. My guess would be that even the indirectly associated costs are substantial. Once you made this investment, it needs to be utilized. Batch jobs require resources only during their execution and create peak workloads. How do you effectively utilize the cluster when jobs finish? How do you plan the schedule and how can you forecast job utilization to even out the workloads?</p>
+
+<h4>Virtualization and the Cloud</h4>
+
+<p>With this utilization model, virtualization would be a great use case for Hadoop because it could offer the needed elasticity of compute resources. Virtualization tools would also be of great help in managing the cluster with provisioning automation and service management integration (self-service/ticketing of resource allocation). Problem is, that Hadoop was not designed for the cloud. It would be hard for YARN to discover the real topology of the underlying hardware, since virtualization hides that. On top of that, how much virtualization can a system take before it becomes inefficient? We have the hardware abstraction by the kernel, then the Java Virtual Machine and byte code. If you put that on top of another virtual layer which itself again has some abstractions, it is a long way for the instruction to reach the metal. Could system-level virtualization like Linux Containers or FreeBSD Jails help?</p>
+
+<h4>Language</h4>
+
+<p>Java and other garbage collected languages are not necessarily the best fit for big data. With managing a lot of data, developers will eventually have to deal with tuning the garbage collector. The memory model could be inefficient in other ways too. Java has no unsigned numbers, not many ways to affect memory alignment to optimize cache lines, no complex value types like <code>structs</code>, and a lot of heap allocation in general. The Java language and libraries often endorse memory sharing instead of messaging. Messaging constructs with share nothing memory models are considered easier to parallelize and scale. Map, reduce and filter concepts have had a place in functional languages for a long time. This is where map and reduce belongs, in a language. Unfortunately Java has very little support for functional concepts and Hadoop had to be attached on top of it, instead of being integrated in the language. I guess that became apparent and gave rise to higher level languages like Pig had to be introduced to the ecosystem. Now developers have to learn new languages which fragments the pool of developers even further and makes it hard to hire top talent or move that talent inside the enterprise. Additionally the community has to take on developing new languages, which is by no means an easy task. Maybe it might have been a good idea to learn from what functional language research and process algebra had to offer. Was there really a need to reinvent the wheel? Languages like Communicating Sequential Processes <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">(CSP)</a> have channels that the MapReduce jobs could be abstracted upon. Why not use a functional language that takes care of distributing the workload efficiently itself, maybe with the help of parameterized functions where the parameters explain the infrastructure topology and expected volumes/loads. Libraries in modern object oriented languages like C# and C++ expand into this space with <code>lambdas</code> and libraries like <a href="http://en.wikipedia.org/wiki/Parallel_Extensions#Task_Parallel_Library">TPL</a>, <a href="http://en.wikipedia.org/wiki/Parallel_Patterns_Library">PPL</a>, and <a href="http://en.wikipedia.org/wiki/Threading_Building_Blocks">TBB</a>. Common to these libraries is that they make use of <code>promises</code> and <code>futures</code>, which essentially creates message channels between threads and enables truly amazing parallelism. Java will hopefully follow suit with Java 8.</p>
+
+<h4>Scaling transistors vs scaling a cluster</h4>
+
+<p><a href="http://en.wikipedia.org/wiki/Moore%27s_law">Moore&rsquo;s law</a> has proven to be good so far. Transistors are doubling every 18 month or so. Hadoop makes use of this exponential growth as well, but not nearly as good as it could. There is no build in way to make use of GPU or other hardware acceleration. Of course you can build that into your distributed functions, but it is not practical for a couple of reasons. In order to make use of the exponential growth, the environment needs to make efficient use of the die. Hadoop lacks that capability. If you want to scale better you make use of the nano-scale.</p>
+
+<blockquote><p>There's Plenty of Room at the Bottom</p><footer><strong>Richard Feynman</strong> <cite><a href='http://en.wikipedia.org/wiki/There&#39;s_Plenty_of_Room_at_the_Bottom'>en.wikipedia.org/wiki/&hellip;</a></cite></footer></blockquote>
+
+
+<h4>Batch</h4>
+
+<p>For a lot of use cases it is not the most efficient way to design your system with a sequence of batch processes. It is computationally very expensive to recalculate the whole batch just because some data changed. Often the delta that this new data represents can be integrated without a complete re-run. If your current analytics runs days and you need to go to hours, Hadoop is your tool. If you need to go from days to seconds, Hadoop is a dead end. In this case you need to go for an <a href="http://en.wikipedia.org/wiki/Event-driven_architecture">event-driven architecture</a>.</p>
+
+<h4>Measure and compare scalability</h4>
+
+<p>It is hard to measure scalability. The question, would it have been cheaper to build the system in another way, is rarely answered. Hey, you finally have a solution and it works. Who would build the same thing differently just to confirm hypotheses (except science)? All these arguments I made on &ldquo;Why Hadoop does not scale&rdquo; are hypotheses and would have to be proven and applied to your specific context. But keep in mind, the claims that it does scale are equally unproven and it all depends on which objective it is measured against.
+But one strong indication for Hadoop’s suboptimal model is the probably biggest compute system called Bitcoin. Bitcoin is a very interesting case, because it is directly measured financially and different approaches compete within these metrics. How fast, how much energy, how much initial costs, operating costs? Well, is this a fair comparison? I would say yes and if to just to prove that Hadoop is not for ideal for everything. The block chain can be compared with HDFS, the miners are distributed on different nodes and they receive data and compute new data.</p>
+
+<p>So if we look at Bitcoin we notice:</p>
+
+<ul>
+<li>it is not build on Hadoop</li>
+<li>no JVM but native computation</li>
+<li>it first utilized multicore architectures</li>
+<li>then it harnessed GPU computation</li>
+<li>GPU&rsquo;s were superseded by FPGAs</li>
+<li>next was the design of optimized <a href="http://en.wikipedia.org/wiki/Application-specific_integrated_circuit">ASIC&rsquo;s</a></li>
+<li>and only then pooling of nodes made sense</li>
+</ul>
+
+
+<h3>Why Hadoop does scale</h3>
+
+<p>There are obviously reasons for why and how Hadoop <em>does</em> scale.</p>
+
+<h4>Commodity nodes</h4>
+
+<p>Sure, make use of the industry at a whole by piggy backing on advances driven by the big scales of commodity hardware. Supercomputers have long shifted to cluster commodity hardware. But commodity hardware includes more than desktops/servers. Do not forget all the nice gaming stuff like GPUs and physics accelerators, FPGA, etc. But as saw earlier, Hadoop, being a toy elephant himself, has problems playing with GPUs.</p>
+
+<h4>Linux as an operating system</h4>
+
+<p>Saving money by using a <em>&ldquo;free&rdquo;</em> OS is good, if you have a lot of nodes. On top of it, it will save a lot of time trying to understand Microsoft&rsquo;s licensing terms, which seems to double in complexity every 18 month. Additionally it is ideal to automate provisioning processes with UNIX based operating systems.</p>
+
+<h4>No SQL databases</h4>
+
+<p>Saving again on licenses. Most of analytics does not rely on ACID requirements anyway and eventual consistency is good enough. It is much easier to cluster these systems.</p>
+
+<h4>Open Source</h4>
+
+<p>Being able to sit on shoulders of a vibrant community is great. Enterprises can break their dependency from enterprise software vendors like IBM, Oracle or Microsoft. Additionally it ensures access to young talent in this area.</p>
+
+<h3>Other References</h3>
+
+<p><a href="https://wiki.apache.org/hadoop/Virtual%20Hadoop">Virtual Hadoop</a><br/>
+<a href="http://www.theregister.co.uk/2010/09/24/google_percolator/">Google Percolator – global search jolt sans MapReduce comedown</a><br/>
+<a href="http://www.nytimes.com/external/gigaom/2010/10/23/23gigaom-beyond-hadoop-next-generation-big-data-architectu-81730.html">Beyond Hadoop: Next-Generation Big Data Architectures</a><br/>
+<a href="http://gigaom.com/2012/07/07/why-the-days-are-numbered-for-hadoop-as-we-know-it/">Why the days are numbered for Hadoop as we know it</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sebastian Kropp</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-08-22'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/big-data/'>big data</a>, <a class='category' href='/blog/categories/hadoop/'>hadoop</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale/" data-via="" data-counturl="http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/12/big-data-visualization-and-d3/" title="Previous Post: Big Data visualization and D3">&laquo; Big Data visualization and D3</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/09/04/d3-update-pattern-on-nested-data/" title="Next Post: D3 Update Pattern on Nested Data">D3 Update Pattern on Nested Data &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/12/enterprise-architecture-for-health-care/">Enterprise Architecture for Health Care</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/health-care-intervention-optimization/">Health Care Intervention Optimization</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/04/d3-update-pattern-on-nested-data/">D3 Update Pattern on Nested Data</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/22/how-hadoop-does-not-scale/">How Hadoop Does Not Scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/big-data-visualization-and-d3/">Big Data Visualization and D3</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sebastiankr">@sebastiankr</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sebastiankr',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+     <h1>Twitter</h1>
+     <a class="twitter-timeline" href="https://twitter.com/SebKropp" data-widget-id="547159711335079936">Tweets by @SebKropp</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+ </section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Sebastian Kropp -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'eascientific';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale/';
+        var disqus_url = 'http://sebastian.kropponline.de/blog/2013/08/22/how-hadoop-does-not-scale/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

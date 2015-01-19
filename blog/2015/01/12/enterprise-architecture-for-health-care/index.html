@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Enterprise Architecture for Health Care - Sebastian Kropp</title>
+  <meta name="author" content="Sebastian Kropp">
+
+  
+  <meta name="description" content="Accelerating Change The healthcare system in the US is changing rapidly. The Affordable Care Act (ACA) introduced regulations requiring insurers and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sebastian Kropp" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-54077795-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sebastian Kropp</a></h1>
+  
+    <h2>Science, Technology and Enterprise Architecture Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sebastian.kropponline.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Enterprise Architecture for Health Care</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T17:08:44-05:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:08 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://sebastian.kropponline.de">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Accelerating Change</h3>
+
+<p>The healthcare system in the US is changing rapidly. The Affordable Care Act (ACA) introduced regulations requiring insurers and providers to change at an unprecedented pace. Whether these changes are for the better or the worse depends on your perspective. But actors not able to adapt to the new lay of the land are going to be left behind.</p>
+
+<p>So what has changed? The ACA is or was politically very contentious. So it might be surprising to some, that if not the ACA, something similar would have been put in place. Looking at the <a href="https://en.wikipedia.org/wiki/History_of_health_care_reform_in_the_United_States">history of health care reform in the United States</a> it becomes clear that the main trajectory remained the same. All these reforms are increasing the pressure for improved health care with a market based philosophy in mind.</p>
+
+<!-- more -->
+
+
+<p>Health care is becoming more complex and competitive along with more government involvement and oversight. We have seen the government opening up Medicare to private players. Now the ACA extends parts of this model and experience into the commercial space. The pressure to participate in these markets will increase and things like preventive care, measuring quality of care, risk adjustment, and health care effectiveness are becoming increasingly important. This trend is accelerating and it does not matter if it is driven by Republicans or Democrats. The core of the problem remains fundamentally the same. As lifespans are increasing, care becomes more expensive and we have a resource constrained environment trying to address rapidly increasing complexity. Addressing <a href="https://en.wikipedia.org/wiki/Comorbidity">comorbidity</a> is a next step and will catapult us into another dimension of complexity.</p>
+
+<p>The health care system, with all its legacy systems and inefficiencies, has issues coping with this accelerated rate of change. This opens up opportunities for innovation and disruptions in the industry.</p>
+
+<h3>How can Enterprise Architecture help?</h3>
+
+<p>Enterprise Architecture (EA) enables meaningful adaptation to change for organizations. In this context meaningful means that the enterprise is able to evolve according corporate objectives and strategy.</p>
+
+<p>The practice of modeling and abstraction is essential to be able to properly reason about change. Just being able to look at a high level and holistic design goes a long way. EA helps to understand risks and opportunities and develops a common understanding within the organization.</p>
+
+<p>The following shows how EA can be used to align business with IT by looking at a subset of an EA model for a health plan. This model is generic enough that it can be applied to Accountable Care Organizations (ACO) or other similar types of organizations.</p>
+
+<p><img class="center" src="/images/healthcare/gap-intervention-process.png" width="700" title="Intervention Process" ></p>
+
+<p>This value chain diagram of a health plan depicts the functional areas to perform interventions to improve quality measure reporting, risk adjustment outcomes and eventually the health care outcome for its members. These are core business functions for health plans and are becoming increasingly important under the ACA.</p>
+
+<p>This model represents a feedback loop, which aligns very well with the problem at hand. The government is constantly raising the bar. In the <a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> system, health plans get a worse rating if they are just as successful as last year. If competing plans improve their quality of care, individual plans not doing that risk getting left behind.
+This system needs to continuously improve and can do so via feedback learning. How many mammograms can we do? What is the most successful intervention type for colonoscopies? Which members are better contacted by phone, which ones by mail? Which members are likely to develop a condition so that it can be diagnosed as early as possible and thereby improve the capitated risk adjustment outcome?</p>
+
+<p><strong>Data Integration</strong>: Data Integration groups all processes concerned with communication and transformation of data. These processes include functions like reporting data to HHS/CMS, retrieve data from members,   integrate with EHR systems, transformation, improve data quality, and many more. This area requires expertise with health care data standards like HIPAA 5010 (<a href="http://x12.org/">ASC X12</a>, 837 Claims), <a href="https://en.wikipedia.org/wiki/Health_Level_7">HL7</a>, and the many semi-standardized tab delimited or fixed width files demanded by HHS/CMS.</p>
+
+<p><strong>Quality Measure Gap Identification</strong>: Quality measures are developed by institutions like <a href="http://www.ncqa.org/">NCQA</a>, <a href="https://www.urac.org/">URAC</a>, <a href="http://www.pqaalliance.org/">PQA</a>, and others. Optimizing interventions for these gaps is increasingly important, not only to promote the quality of care but also because they have a direct influence on reimbursements and risk adjustments (<a href="http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/FSQRS.html">Five-Star Quality Rating</a> and <a href="https://en.wikipedia.org/wiki/Healthcare_Effectiveness_Data_and_Information_Set">HEDIS</a> ).</p>
+
+<p><strong>Risk Adjustment Gap Identification</strong>: Risk adjustment is based on rules defined by HHS/CMS with the Hierarchical Condition Categories (HCC). Predictive analytics helps to identify gaps prospectively and significantly improves the adjustment outcome. At the same time it can substantiate claims to support an audit like RADV. The approach is similar for the new commercial marketplaces and Medicare/Medicaid plans (RAPS/HIX edge server). More details about risk adjustment can be found in the report published by CMS with the name “<a href="http://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Downloads/Evaluation_Risk_Adj_Model_2011.pdf">Evaluation of the CMS-HCC Risk Adjustment Model</a>”</p>
+
+<p><strong>Intervention Optimization</strong>: Intervention Optimization is downstream from Gap Identification processes. Every intervention has a cost and a potential value for closing the gap. Optimizing on this is constrained by several rules. The goal is to find the best execution plan for a given budget across the population. Probabilities guide which type of intervention and when to conduct an intervention on a specific member.</p>
+
+<p><strong>Intervention Execution</strong>: After finding out which gaps are going to be intervened upon, the intervention processes are executed. Result from that intervention feeds back into the analytical cycle. The result of the intervention influences gap identification and also the next intervention plan.</p>
+
+<h4>Data Model</h4>
+
+<p>This model is based on <strong>Gaps</strong> and <strong>Interventions</strong>. So what are these within this EA model?</p>
+
+<p><img class="center" src="/images/healthcare/objective-gap-intervention-data-model.png" title="Objective Gap Intervention" ></p>
+
+<p><strong>Gap</strong>: A gap is an identified undesirable state with a certain probability of existence. It could be a gap in care or a data gap. Some types of gaps can be addressed. Addressing gaps tries to improve the overall state for a system. Gaps might exist, which cannot be addressed. Gaps are directly linked to a measurable objective. Objectives define what it means to <em>improve</em>.</p>
+
+<p><strong>Intervention</strong>: Intervention is the act or the process of addressing a gap with the goal to close that gap. There could be just one exclusive intervention per gap or multiple simulations interventions per gap. If an intervention requires exclusivity, other interventions cannot be conducted while the current exclusive intervention is on-going.</p>
+
+<p>Future posts will detail this model further. So stay tuned!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sebastian Kropp</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T17:08:44-05:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:08 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/enterprise-architecture/'>enterprise architecture</a>, <a class='category' href='/blog/categories/health-care/'>health care</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care/" data-via="" data-counturl="http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/17/health-care-intervention-optimization/" title="Previous Post: Health Care Intervention Optimization">&laquo; Health Care Intervention Optimization</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/12/enterprise-architecture-for-health-care/">Enterprise Architecture for Health Care</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/health-care-intervention-optimization/">Health Care Intervention Optimization</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/04/d3-update-pattern-on-nested-data/">D3 Update Pattern on Nested Data</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/22/how-hadoop-does-not-scale/">How Hadoop Does Not Scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/big-data-visualization-and-d3/">Big Data Visualization and D3</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sebastiankr">@sebastiankr</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sebastiankr',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+     <h1>Twitter</h1>
+     <a class="twitter-timeline" href="https://twitter.com/SebKropp" data-widget-id="547159711335079936">Tweets by @SebKropp</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+ </section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Sebastian Kropp -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'eascientific';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care/';
+        var disqus_url = 'http://sebastian.kropponline.de/blog/2015/01/12/enterprise-architecture-for-health-care/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
