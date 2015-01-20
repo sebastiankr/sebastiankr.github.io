@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Health Care | Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/blog/categories/health-care/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2015-01-19T16:58:55-05:00</updated>
+  <updated>2015-01-20T15:28:26-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -30,13 +30,13 @@
 
 <p><img class="center" src="/images/healthcare/gap-intervention-focus-optimization.png" width="700" title="Intervention Optimization" ></p>
 
-<p>Starting with intervention optimization requires us to think about the output of <em>gap identification processes</em> and the input to <em>intervention execution systems</em>. Starting with the core of a system is a good idea. Intervention optimization is at the center in this case and once designed, gap identification and intervention execution will fall into place almost automatically.
+<p>Starting with intervention optimization requires us to think about the output of <em>gap identification processes</em> and the input to <em>intervention execution systems</em>. Intervention optimization is at the center and once designed, gap identification and intervention execution will fall into place almost automatically.
 The following model is the basis for the <em>Intervention Optimization Engine</em> (IOE) application. <strong>Try it out <a href="http://sebastian.kropponline.de/intervention-optimization-engine/" target="_blank">here</a>.</strong></p>
 
 <!-- more -->
 
 
-<p>The <em>Intervention Optimization Engine</em> receives gaps from downstream applications. Every <em>gap identification system</em> determines the likelihood of a gap existing, the value of a gap, and its cost. These gaps are send to the IOE and it determines which interventions should optimally be executed under given a certain budget. It then creates a utilization plan by trying to spread out the interventions as evenly as possible across the year. This avoids peaks and an even utilization of intervention processes reduces costs.</p>
+<p>The <em>Intervention Optimization Engine</em> receives gaps from downstream applications. Every <em>gap identification system</em> determines the likelihood of a gap existing, the value of a gap, and its cost. These gaps are send to the IOE and it determines which interventions should optimally be executed with a given budget. It then creates a utilization plan by trying to spread out the interventions as evenly as possible across the year. This avoids peaks. An even utilization of intervention processes reduces costs.</p>
 
 <h3>The Data Model</h3>
 
@@ -49,13 +49,13 @@ The following model is the basis for the <em>Intervention Optimization Engine</e
 <p>For our purpose, a <em>gap</em> is something that can be intervened upon. That means that there is a business process that, when executed, can potentially close that gap. An <em>intervention type</em> is exactly one of those business processes. A <em>gap</em> could have multiple possible intervention types associated with it. As an example:</p>
 
 <p>The current demo of the IOE has three types of interventions available.
-<em>MEOT</em> stands for a member educational outreach via telephone. An educational outreach via mail is a <em>MEOM</em> and <em>IHA</em> is an in-home assessment. There are potentially many more, but it does not matter to the IOE. It is agnostic of details for intervention types. The <em>intervention execution systems</em> know how to conduct these interventions. This is a nice separation of concerns. <em>Intervention execution systems</em> can access the intervention plan of the IOE. They then pick interventions form the plan, which does not necessary have to be in order. <em>Intervention execution systems</em> could potentially have their own little intelligence build in.</p>
+<em>MEOT</em> stands for a member educational outreach via telephone. An educational outreach via mail is a <em>MEOM</em>. <em>IHA</em> is an in-home assessment. There are potentially many more, but it does not matter to the IOE. It is agnostic of details for intervention types. The <em>intervention execution systems</em> know how to conduct these interventions. This is a nice separation of concerns. <em>Intervention execution systems</em> can access the intervention plan of the IOE. They pick interventions form the plan. This does not necessary have to be in order. <em>Intervention execution systems</em> could potentially have their own intelligence build in.</p>
 
-<p>After selection of each intervention, the IOE gets notified and the intervention gets taken out of the optimization and planning process by setting the status from <code>Planned</code> to <code>Started</code>.  This can be simulated with the demo. Interventions have two basic outcomes. Either they are successful and the value for the health plan has been generated or they are unsuccessful and only the cost have been incurred without any benefit for the plan. There are more states for interventions, which can be depicted with a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a>. These states can be used for nice visualization to give an overview of the current performance.</p>
+<p>After selection of each intervention, the IOE gets notified and the intervention gets taken out of the optimization and planning process by setting the status from <code>Planned</code> to <code>Started</code>.  This can be simulated in the demo application. Interventions have two basic outcomes. Either they are successful and the value for the health plan has been generated or they are unsuccessful and only the cost have been incurred without any benefit for the plan. There are more states for interventions, which can be depicted with a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a>. These states can be used for visualization to provide an overview of the current performance.</p>
 
 <h3>Intervention Optimization Engine</h3>
 
-<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine that I developed. Features are:</p>
+<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine. Features are:</p>
 
 <ul>
 <li>Full <em>optimization under a second</em> for a plan with up to 500,000 members
