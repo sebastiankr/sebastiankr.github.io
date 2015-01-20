@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Health Care | Sebastian Kropp]]></title>
   <link href="http://sebastian.kropponline.de/blog/categories/health-care/atom.xml" rel="self"/>
   <link href="http://sebastian.kropponline.de/"/>
-  <updated>2015-01-20T15:28:26-05:00</updated>
+  <updated>2015-01-20T15:29:54-05:00</updated>
   <id>http://sebastian.kropponline.de/</id>
   <author>
     <name><![CDATA[Sebastian Kropp]]></name>
@@ -55,7 +55,7 @@ The following model is the basis for the <em>Intervention Optimization Engine</e
 
 <h3>Intervention Optimization Engine</h3>
 
-<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Please try out the <strong>Intervention Optimization</strong> Engine. Features are:</p>
+<p>Admittedly this model is more targeting health plans, but with minor changes it could equally fit ACO models or data analytic vendors. Features for the <strong>Intervention OptimizationEngine</strong> are:</p>
 
 <ul>
 <li>Full <em>optimization under a second</em> for a plan with up to 500,000 members
